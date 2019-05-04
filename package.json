@@ -1,0 +1,26 @@
+{
+  "name": "ts-raytracer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrkuc/ts-raytracer.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mrkuc/ts-raytracer/issues"
+  },
+  "homepage": "https://github.com/mrkuc/ts-raytracer#readme",
+  "devDependencies": {
+    "@types/node": "^12.0.0",
+    "ts-node": "^8.1.0",
+    "typescript": "^3.4.5"
+  }
+}
