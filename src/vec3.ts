@@ -1,8 +1,8 @@
-class Vec3 {
+export class Vec3 {
     x: number;
     y: number;
     z: number;
-    
+
     constructor(x: number, y: number, z: number) {
         this.x = x;
         this.y = y;
@@ -16,19 +16,19 @@ class Vec3 {
     minus(v: Vec3): Vec3 {
         return new Vec3(this.x - v.x, this.y - v.y, this.z - v.z);
     }
-    
+
     mul(v: Vec3): Vec3 {
         return new Vec3(this.x * v.x, this.y * v.y, this.z * v.z);
     }
-    
+
     div(v: Vec3): Vec3 {
         return new Vec3(this.x / v.x, this.y / v.y, this.z / v.z);
     }
-    
+
     muln(n: number): Vec3 {
         return new Vec3(this.x * n, this.y * n, this.z * n);
     }
-    
+
     divn(n: number): Vec3 {
         return new Vec3(this.x / n, this.y / n, this.z / n);
     }
@@ -56,5 +56,4 @@ class Vec3 {
         return new Vec3(x, y, z);
     }
 }
-
 
