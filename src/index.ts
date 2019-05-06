@@ -7,10 +7,19 @@ import { HittableList } from "./hittable_list";
 import { Sphere } from "./sphere";
 import { Camera } from "./camera";
 
+const random_in_unit_sphere = (): Vec3 => {
+    let p = new Vec3(0.0, 0.0, 0.0);
+    do {
+        p = new Vec3(Math.random(), Math.random(), Math.random()).muln(2.0).minus(new Vec3(1.0, 1.0, 1.0))
+    } while (p.squared_length() >= 1.0);
+    return p;
+};
+
 const color = (r: Ray, world: Hittable): Vec3 => {
     let rec = HitRecord.empty();
-    if (world.hit(r, 0.0, Number.MAX_VALUE, rec)) {
-        return (new Vec3(rec.normal.x + 1.0, rec.normal.y + 1.0, rec.normal.z + 1.0)).muln(0.5);
+    if (world.hit(r, 0.001, Number.MAX_VALUE, rec)) {
+        const target = rec.p.plus(rec.normal.plus(random_in_unit_sphere()));
+        return color(new Ray(rec.p, target.minus(rec.p)), world).muln(0.5);
     } else {
         const unit_direction = r.direction.to_unit();
         const t = 0.5 * (unit_direction.y + 1.0);
@@ -47,6 +56,7 @@ const main = async () => {
                 col = col.plus(color(r, list));
             }
             col = col.divn(ns);
+            col = new Vec3(Math.sqrt(col.x), Math.sqrt(col.y), Math.sqrt(col.z));
             const ir = Math.floor(col.x * 255.99);
             const ig = Math.floor(col.y * 255.99);
             const ib = Math.floor(col.z * 255.99);
