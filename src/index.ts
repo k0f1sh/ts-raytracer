@@ -32,7 +32,11 @@ const main = async () => {
     const ny: number = 100;
     const ns: number = 100;
 
-    const camera = Camera.create(new Vec3(-2, 2, 1), new Vec3(0, 0, -1), new Vec3(0, 1, 0), 90, nx / ny);
+    const lookfrom = new Vec3(3, 3, 2);
+    const lookat = new Vec3(0, 0, -1);
+    const dist_to_focus = lookfrom.minus(lookat).length();
+    const aperture = 2.0;
+    const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus);
 
     const l: Array<Hittable> = [
         new Sphere(new Vec3(0, 0, -1), 0.5, new Lambertian(new Vec3(0.8, 0.3, 0.3))),
