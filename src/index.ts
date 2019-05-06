@@ -5,6 +5,7 @@ import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
 import { HittableList } from "./hittable_list";
 import { Sphere } from "./sphere";
+import { Camera } from "./camera";
 
 const color = (r: Ray, world: Hittable): Vec3 => {
     let rec = HitRecord.empty();
@@ -20,12 +21,13 @@ const color = (r: Ray, world: Hittable): Vec3 => {
 const main = async () => {
     const nx: number = 200;
     const ny: number = 100;
+    const ns: number = 100;
 
     const lower_left_corner = new Vec3(-2.0, -1.0, -1.0);
     const horizontal = new Vec3(4.0, 0.0, 0.0);
     const vertical = new Vec3(0.0, 2.0, 0.0);
     const origin = new Vec3(0.0, 0.0, 0.0);
-
+    const camera = new Camera(lower_left_corner, horizontal, vertical, origin);
 
     const l: Array<Hittable> = [
         new Sphere(new Vec3(0, 0, -1), 0.5),
@@ -37,10 +39,14 @@ const main = async () => {
 
     for (let j = ny - 1; j >= 0; j--) {
         for (let i = 0; i < nx; i++) {
-            const u = i / nx;
-            const v = j / ny;
-            const r = new Ray(origin, lower_left_corner.plus(horizontal.muln(u).plus(vertical.muln(v))));
-            const col = color(r, list);
+            let col = new Vec3(0.0, 0.0, 0.0);
+            for (let s = 0; s < ns; s++) {
+                const u = (i + Math.random()) / nx;
+                const v = (j + Math.random()) / ny;
+                const r = camera.get_ray(u, v);
+                col = col.plus(color(r, list));
+            }
+            col = col.divn(ns);
             const ir = Math.floor(col.x * 255.99);
             const ig = Math.floor(col.y * 255.99);
             const ib = Math.floor(col.z * 255.99);
