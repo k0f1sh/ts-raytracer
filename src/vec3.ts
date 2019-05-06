@@ -55,5 +55,11 @@ export class Vec3 {
         const z = this.x * v.y - this.y * v.x;
         return new Vec3(x, y, z);
     }
+
+    copy(v: Vec3) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
+    }
 }
 

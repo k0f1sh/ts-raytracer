@@ -6,20 +6,19 @@ import { Hittable } from "./hittable";
 import { HittableList } from "./hittable_list";
 import { Sphere } from "./sphere";
 import { Camera } from "./camera";
+import { Lambertian } from "./lambertian";
+import { Metal } from "./metal";
 
-const random_in_unit_sphere = (): Vec3 => {
-    let p = new Vec3(0.0, 0.0, 0.0);
-    do {
-        p = new Vec3(Math.random(), Math.random(), Math.random()).muln(2.0).minus(new Vec3(1.0, 1.0, 1.0))
-    } while (p.squared_length() >= 1.0);
-    return p;
-};
-
-const color = (r: Ray, world: Hittable): Vec3 => {
+const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
     let rec = HitRecord.empty();
     if (world.hit(r, 0.001, Number.MAX_VALUE, rec)) {
-        const target = rec.p.plus(rec.normal.plus(random_in_unit_sphere()));
-        return color(new Ray(rec.p, target.minus(rec.p)), world).muln(0.5);
+        let scatterd = Ray.empty();
+        let attenuation = new Vec3(0.0, 0.0, 0.0);
+        if ((depth < 50) && rec.mat.scatter(r, rec, attenuation, scatterd)) {
+            return attenuation.mul(color(scatterd, world, depth + 1));
+        } else {
+            return new Vec3(0.0, 0.0, 0.0);
+        }
     } else {
         const unit_direction = r.direction.to_unit();
         const t = 0.5 * (unit_direction.y + 1.0);
@@ -39,8 +38,10 @@ const main = async () => {
     const camera = new Camera(lower_left_corner, horizontal, vertical, origin);
 
     const l: Array<Hittable> = [
-        new Sphere(new Vec3(0, 0, -1), 0.5),
-        new Sphere(new Vec3(0, -100.5, -1), 100),
+        new Sphere(new Vec3(0, 0, -1), 0.5, new Lambertian(new Vec3(0.8, 0.3, 0.3))),
+        new Sphere(new Vec3(0, -100.5, -1), 100, new Lambertian(new Vec3(0.8, 0.8, 0.0))),
+        new Sphere(new Vec3(1, 0, -1), 0.5, new Metal(new Vec3(0.8, 0.6, 0.2), 1.0)),
+        new Sphere(new Vec3(-1, 0, -1), 0.5, new Metal(new Vec3(0.8, 0.8, 0.8), 0.3)),
     ];
     const list: HittableList = new HittableList(l);
 
@@ -53,7 +54,7 @@ const main = async () => {
                 const u = (i + Math.random()) / nx;
                 const v = (j + Math.random()) / ny;
                 const r = camera.get_ray(u, v);
-                col = col.plus(color(r, list));
+                col = col.plus(color(r, list, 0));
             }
             col = col.divn(ns);
             col = new Vec3(Math.sqrt(col.x), Math.sqrt(col.y), Math.sqrt(col.z));
