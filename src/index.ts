@@ -1,12 +1,21 @@
-const fs = require("fs");
+//const fs = require("fs");
 import { Vec3 } from "./vec3";
 import { Ray } from "./ray";
+import { HitRecord } from "./hit_record";
+import { Hittable } from "./hittable";
+import { HittableList } from "./hittable_list";
+import { Sphere } from "./sphere";
 
-const color = (r: Ray): Vec3 => {
-    const unit_direction = r.direction.to_unit();
-    const t = 0.5 * (unit_direction.y + 1.0);
-    return (new Vec3(1.0, 1.0, 1.0)).muln(1.0 - t).plus((new Vec3(0.5, 0.7, 1.0).muln(t)));
-}
+const color = (r: Ray, world: Hittable): Vec3 => {
+    let rec = HitRecord.empty();
+    if (world.hit(r, 0.0, Number.MAX_VALUE, rec)) {
+        return (new Vec3(rec.normal.x + 1.0, rec.normal.y + 1.0, rec.normal.z + 1.0)).muln(0.5);
+    } else {
+        const unit_direction = r.direction.to_unit();
+        const t = 0.5 * (unit_direction.y + 1.0);
+        return (new Vec3(1.0, 1.0, 1.0)).muln(1.0 - t).plus((new Vec3(0.5, 0.7, 1.0).muln(t)));
+    }
+};
 
 const main = async () => {
     const nx: number = 200;
@@ -17,6 +26,13 @@ const main = async () => {
     const vertical = new Vec3(0.0, 2.0, 0.0);
     const origin = new Vec3(0.0, 0.0, 0.0);
 
+
+    const l: Array<Hittable> = [
+        new Sphere(new Vec3(0, 0, -1), 0.5),
+        new Sphere(new Vec3(0, -100.5, -1), 100),
+    ];
+    const list: HittableList = new HittableList(l);
+
     console.log(`P3\n${nx} ${ny}\n255`);
 
     for (let j = ny - 1; j >= 0; j--) {
@@ -24,13 +40,13 @@ const main = async () => {
             const u = i / nx;
             const v = j / ny;
             const r = new Ray(origin, lower_left_corner.plus(horizontal.muln(u).plus(vertical.muln(v))));
-            const col = color(r);
+            const col = color(r, list);
             const ir = Math.floor(col.x * 255.99);
             const ig = Math.floor(col.y * 255.99);
             const ib = Math.floor(col.z * 255.99);
             console.log(`${ir} ${ig} ${ib}`);
         }
     }
-}
+};
 
 main().catch(err => console.log(err));
