@@ -8,6 +8,7 @@ import { Sphere } from "./sphere";
 import { Camera } from "./camera";
 import { Lambertian } from "./lambertian";
 import { Metal } from "./metal";
+import { Dielectric } from "./dielectric";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
     let rec = HitRecord.empty();
@@ -41,7 +42,8 @@ const main = async () => {
         new Sphere(new Vec3(0, 0, -1), 0.5, new Lambertian(new Vec3(0.8, 0.3, 0.3))),
         new Sphere(new Vec3(0, -100.5, -1), 100, new Lambertian(new Vec3(0.8, 0.8, 0.0))),
         new Sphere(new Vec3(1, 0, -1), 0.5, new Metal(new Vec3(0.8, 0.6, 0.2), 1.0)),
-        new Sphere(new Vec3(-1, 0, -1), 0.5, new Metal(new Vec3(0.8, 0.8, 0.8), 0.3)),
+        new Sphere(new Vec3(-1, 0, -1), 0.5, new Dielectric(1.5)),
+        new Sphere(new Vec3(-1, 0, -1), -0.45, new Dielectric(1.5)),
     ];
     const list: HittableList = new HittableList(l);
 

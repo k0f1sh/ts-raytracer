@@ -2,11 +2,7 @@ import { Vec3 } from "./vec3";
 import { Ray } from "./ray";
 import { Material } from "./material";
 import { HitRecord } from "./hit_record";
-import { random_in_unit_sphere } from "./util";
-
-const reflect = (v: Vec3, n: Vec3): Vec3 => {
-    return v.minus(n.muln(v.dot(n) * 2));
-}
+import { random_in_unit_sphere, reflect } from "./util";
 
 export class Metal implements Material {
     albedo: Vec3;
