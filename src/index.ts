@@ -3,12 +3,8 @@ import { Vec3 } from "./vec3";
 import { Ray } from "./ray";
 import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
-import { HittableList } from "./hittable_list";
-import { Sphere } from "./sphere";
 import { Camera } from "./camera";
-import { Lambertian } from "./lambertian";
-import { Metal } from "./metal";
-import { Dielectric } from "./dielectric";
+import { random_scene } from "./util";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
     let rec = HitRecord.empty();
@@ -28,24 +24,18 @@ const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
 };
 
 const main = async () => {
-    const nx: number = 200;
-    const ny: number = 100;
-    const ns: number = 100;
+    const nx: number = 1200;
+    const ny: number = 800;
+    const ns: number = 10;
 
-    const lookfrom = new Vec3(3, 3, 2);
-    const lookat = new Vec3(0, 0, -1);
-    const dist_to_focus = lookfrom.minus(lookat).length();
-    const aperture = 2.0;
+    const lookfrom = new Vec3(13, 2, 3);
+    const lookat = new Vec3(0, 0, 0);
+    const dist_to_focus = 10;
+    const aperture = 0.1;
     const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus);
 
-    const l: Array<Hittable> = [
-        new Sphere(new Vec3(0, 0, -1), 0.5, new Lambertian(new Vec3(0.8, 0.3, 0.3))),
-        new Sphere(new Vec3(0, -100.5, -1), 100, new Lambertian(new Vec3(0.8, 0.8, 0.0))),
-        new Sphere(new Vec3(1, 0, -1), 0.5, new Metal(new Vec3(0.8, 0.6, 0.2), 1.0)),
-        new Sphere(new Vec3(-1, 0, -1), 0.5, new Dielectric(1.5)),
-        new Sphere(new Vec3(-1, 0, -1), -0.45, new Dielectric(1.5)),
-    ];
-    const list: HittableList = new HittableList(l);
+
+    const list = random_scene();
 
     console.log(`P3\n${nx} ${ny}\n255`);
 
@@ -64,6 +54,7 @@ const main = async () => {
             const ig = Math.floor(col.y * 255.99);
             const ib = Math.floor(col.z * 255.99);
             console.log(`${ir} ${ig} ${ib}`);
+            console.error(`${(ny - j) * nx + i}/${nx * ny}`);
         }
     }
 };

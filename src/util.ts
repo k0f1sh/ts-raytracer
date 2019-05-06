@@ -1,4 +1,10 @@
 import { Vec3 } from "./vec3";
+import { Hittable } from "./hittable";
+import { Sphere } from "./sphere";
+import { Lambertian } from "./lambertian";
+import { Metal } from "./metal";
+import { Dielectric } from "./dielectric";
+import { HittableList } from "./hittable_list";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -38,3 +44,41 @@ export const random_in_unit_disk = (): Vec3 => {
     } while (p.dot(p) >= 1.0);
     return p;
 }
+
+//------------------------------------------------------
+export const random_scene = () => {
+    let list = new Array<Hittable>();
+    list.push(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(new Vec3(0.5, 0.5, 0.5))));
+
+    for (let a = -11; a < 11; a++) {
+        for (let b = -11; b < 11; b++) {
+            let choose_mat = Math.random();
+            let center = new Vec3(a + 0.9 * Math.random(), 0.2, b + 0.9 * Math.random());
+            if ((center.minus(new Vec3(4, 0.2, 0)).length() > 0.9)) {
+                if (choose_mat < 0.8) {
+                    list.push(new Sphere(center, 0.2, new Lambertian(new Vec3(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
+                } else if (choose_mat < 0.95) {
+                    list.push(new Sphere(
+                        center,
+                        0.2,
+                        new Metal(
+                            new Vec3(
+                                0.5 * (1 + Math.random()),
+                                0.5 * (1 + Math.random()),
+                                0.5 * (1 + Math.random())
+                            ),
+                            0.5 * Math.random())
+                    ));
+                } else {
+                    list.push(new Sphere(center, 0.2, new Dielectric(1.5)));
+                }
+            }
+        }
+    }
+
+    list.push(new Sphere(new Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
+    list.push(new Sphere(new Vec3(-4, 1, 0), 1.0, new Lambertian(new Vec3(0.4, 0.2, 0.1))));
+    list.push(new Sphere(new Vec3(4, 1, 0), 1.0, new Metal(new Vec3(0.7, 0.6, 0.5), 0.0)));
+
+    return new HittableList(list);
+};
