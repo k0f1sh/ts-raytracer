@@ -8,6 +8,8 @@ import { Dielectric } from "./dielectric";
 import { HittableList } from "./hittable_list";
 import { MovingSphere } from "./moving_sphere";
 import { BvhNode } from "./bvh_node";
+import { ConstantTexture } from "./constant_texture";
+import { CheckerTexture } from "./checker_texture";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -67,7 +69,8 @@ export const surrounding_box = (box0: AABB, box1: AABB): AABB => {
 //------------------------------------------------------
 export const random_scene = () => {
     let list = new Array<Hittable>();
-    list.push(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(new Vec3(0.5, 0.5, 0.5))));
+    const ct = new CheckerTexture(new ConstantTexture(new Vec3(0.2, 0.3, 0.1)), new ConstantTexture(new Vec3(0.9, 0.9, 0.9)));
+    list.push(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(ct)));
 
     for (let a = -11; a < 11; a++) {
         for (let b = -11; b < 11; b++) {
@@ -82,7 +85,7 @@ export const random_scene = () => {
                             0.0,
                             1.0,
                             0.2,
-                            new Lambertian(new Vec3(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
+                            new Lambertian(new ConstantTexture(new Vec3(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random())))));
                 } else if (choose_mat < 0.95) {
                     list.push(new Sphere(
                         center,
@@ -103,7 +106,7 @@ export const random_scene = () => {
     }
 
     list.push(new Sphere(new Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
-    list.push(new Sphere(new Vec3(-4, 1, 0), 1.0, new Lambertian(new Vec3(0.4, 0.2, 0.1))));
+    list.push(new Sphere(new Vec3(-4, 1, 0), 1.0, new Lambertian(new ConstantTexture(new Vec3(0.4, 0.2, 0.1)))));
     list.push(new Sphere(new Vec3(4, 1, 0), 1.0, new Metal(new Vec3(0.7, 0.6, 0.5), 0.0)));
 
     //return new HittableList(list);
