@@ -1,3 +1,4 @@
+import { AABB } from "./aabb";
 import { Vec3 } from "./vec3";
 import { Ray } from "./ray";
 import { Hittable } from "./hittable";
@@ -40,5 +41,11 @@ export class Sphere implements Hittable {
             }
         }
         return false;
+    }
+
+    bounding_box(t0: number, t1: number, box: AABB): boolean {
+        const v = new Vec3(this.radius, this.radius, this.radius);
+        box.copy(new AABB(this.center.minus(v), this.center.plus(v)));
+        return true;
     }
 }

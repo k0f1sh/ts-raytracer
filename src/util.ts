@@ -1,3 +1,4 @@
+import { AABB } from "./aabb";
 import { Vec3 } from "./vec3";
 import { Hittable } from "./hittable";
 import { Sphere } from "./sphere";
@@ -6,6 +7,7 @@ import { Metal } from "./metal";
 import { Dielectric } from "./dielectric";
 import { HittableList } from "./hittable_list";
 import { MovingSphere } from "./moving_sphere";
+import { BvhNode } from "./bvh_node";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -45,6 +47,22 @@ export const random_in_unit_disk = (): Vec3 => {
     } while (p.dot(p) >= 1.0);
     return p;
 }
+
+export const surrounding_box = (box0: AABB, box1: AABB): AABB => {
+    const small = new Vec3(
+        Math.min(box0.min.x, box1.min.x),
+        Math.min(box0.min.y, box1.min.y),
+        Math.min(box0.min.z, box1.min.z)
+    );
+    const big = new Vec3(
+        Math.max(box0.max.x, box1.max.x),
+        Math.max(box0.max.y, box1.max.y),
+        Math.max(box0.max.z, box1.max.z)
+    );
+    return new AABB(small, big);
+}
+
+
 
 //------------------------------------------------------
 export const random_scene = () => {
@@ -88,5 +106,6 @@ export const random_scene = () => {
     list.push(new Sphere(new Vec3(-4, 1, 0), 1.0, new Lambertian(new Vec3(0.4, 0.2, 0.1))));
     list.push(new Sphere(new Vec3(4, 1, 0), 1.0, new Metal(new Vec3(0.7, 0.6, 0.5), 0.0)));
 
-    return new HittableList(list);
+    //return new HittableList(list);
+    return new BvhNode(list, 0, 1.0);
 };

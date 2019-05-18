@@ -1,8 +1,10 @@
+import { AABB } from "./aabb";
 import { Vec3 } from "./vec3";
 import { Ray } from "./ray";
 import { Hittable } from "./hittable";
 import { HitRecord } from "./hit_record";
 import { Material } from "./material";
+import { surrounding_box } from "./util";
 
 export class MovingSphere implements Hittable {
     center0: Vec3;
@@ -58,5 +60,14 @@ export class MovingSphere implements Hittable {
             }
         }
         return false;
+    }
+
+    bounding_box(t0: number, t1: number, box: AABB): boolean {
+        const v = new Vec3(this.radius, this.radius, this.radius);
+
+        const box_t0 = new AABB(this.center0.minus(v), this.center0.plus(v));
+        const box_t1 = new AABB(this.center1.minus(v), this.center1.plus(v));
+        box.copy(surrounding_box(box_t0, box_t1));
+        return true;
     }
 }
