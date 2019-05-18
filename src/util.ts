@@ -5,6 +5,7 @@ import { Lambertian } from "./lambertian";
 import { Metal } from "./metal";
 import { Dielectric } from "./dielectric";
 import { HittableList } from "./hittable_list";
+import { MovingSphere } from "./moving_sphere";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -56,7 +57,14 @@ export const random_scene = () => {
             let center = new Vec3(a + 0.9 * Math.random(), 0.2, b + 0.9 * Math.random());
             if ((center.minus(new Vec3(4, 0.2, 0)).length() > 0.9)) {
                 if (choose_mat < 0.8) {
-                    list.push(new Sphere(center, 0.2, new Lambertian(new Vec3(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
+                    list.push(
+                        new MovingSphere(
+                            center,
+                            center.plus(new Vec3(0, 0.5 * Math.random(), 0)),
+                            0.0,
+                            1.0,
+                            0.2,
+                            new Lambertian(new Vec3(Math.random() * Math.random(), Math.random() * Math.random(), Math.random() * Math.random()))));
                 } else if (choose_mat < 0.95) {
                     list.push(new Sphere(
                         center,

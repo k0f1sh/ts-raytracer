@@ -35,9 +35,9 @@ export class Dielectric implements Material {
             reflect_prob = 1.0;
         }
         if (Math.random() < reflect_prob) {
-            scatterd.copy(new Ray(rec.p, reflected));
+            scatterd.copy(new Ray(rec.p, reflected, r_in.time));
         } else {
-            scatterd.copy(new Ray(rec.p, refracted));
+            scatterd.copy(new Ray(rec.p, refracted, r_in.time));
         }
         return true;
     }

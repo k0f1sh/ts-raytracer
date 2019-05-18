@@ -24,16 +24,15 @@ const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
 };
 
 const main = async () => {
-    const nx: number = 1200;
-    const ny: number = 800;
-    const ns: number = 10;
+    const nx: number = 600;
+    const ny: number = 400;
+    const ns: number = 50;
 
     const lookfrom = new Vec3(13, 2, 3);
     const lookat = new Vec3(0, 0, 0);
     const dist_to_focus = 10;
-    const aperture = 0.1;
-    const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus);
-
+    const aperture = 0.0;
+    const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
 
     const list = random_scene();
 

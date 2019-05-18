@@ -15,7 +15,7 @@ export class Metal implements Material {
 
     scatter(r_in: Ray, rec: HitRecord, attenuation: Vec3, scatterd: Ray): boolean {
         const reflected = reflect(r_in.direction.to_unit(), rec.normal);
-        scatterd.copy(new Ray(rec.p, reflected.plus(random_in_unit_sphere().muln(this.fuzz))));
+        scatterd.copy(new Ray(rec.p, reflected.plus(random_in_unit_sphere().muln(this.fuzz)), r_in.time));
         attenuation.copy(this.albedo);
         return (scatterd.direction.dot(rec.normal) > 0);
     }

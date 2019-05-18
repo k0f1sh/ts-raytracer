@@ -13,7 +13,7 @@ export class Lambertian implements Material {
 
     scatter(r_in: Ray, rec: HitRecord, attenuation: Vec3, scatterd: Ray): boolean {
         const target = rec.p.plus(rec.normal.plus(random_in_unit_sphere()));
-        scatterd.copy(new Ray(rec.p, target.minus(rec.p)));
+        scatterd.copy(new Ray(rec.p, target.minus(rec.p), r_in.time));
         attenuation.copy(this.albedo);
         return true;
     }
