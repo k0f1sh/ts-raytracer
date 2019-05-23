@@ -10,6 +10,7 @@ import { MovingSphere } from "./moving_sphere";
 import { BvhNode } from "./bvh_node";
 import { ConstantTexture } from "./constant_texture";
 import { CheckerTexture } from "./checker_texture";
+import { NoiseTexture } from "./noise_texture";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -108,6 +109,18 @@ export const random_scene = () => {
     list.push(new Sphere(new Vec3(0, 1, 0), 1.0, new Dielectric(1.5)));
     list.push(new Sphere(new Vec3(-4, 1, 0), 1.0, new Lambertian(new ConstantTexture(new Vec3(0.4, 0.2, 0.1)))));
     list.push(new Sphere(new Vec3(4, 1, 0), 1.0, new Metal(new Vec3(0.7, 0.6, 0.5), 0.0)));
+
+    //return new HittableList(list);
+    return new BvhNode(list, 0, 1.0);
+};
+
+
+export const two_perlin_spheres = () => {
+    const perlintext = new NoiseTexture(10);
+    let list = new Array<Hittable>();
+
+    list.push(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(perlintext)));
+    list.push(new Sphere(new Vec3(0, 2, 0), 2, new Lambertian(perlintext)));
 
     //return new HittableList(list);
     return new BvhNode(list, 0, 1.0);

@@ -4,7 +4,8 @@ import { Ray } from "./ray";
 import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
 import { Camera } from "./camera";
-import { random_scene } from "./util";
+import { random_scene, two_perlin_spheres } from "./util";
+import { Perlin } from "./perlin";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
     let rec = HitRecord.empty();
@@ -28,13 +29,16 @@ const main = async () => {
     const ny: number = 400;
     const ns: number = 50;
 
+    Perlin.init();
+
     const lookfrom = new Vec3(13, 2, 3);
     const lookat = new Vec3(0, 0, 0);
     const dist_to_focus = 10;
     const aperture = 0.0;
     const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
 
-    const list = random_scene();
+    //const list = random_scene();
+    const list = two_perlin_spheres();
 
     console.log(`P3\n${nx} ${ny}\n255`);
 
@@ -58,4 +62,4 @@ const main = async () => {
     }
 };
 
-main().catch(err => console.log(err));
+main().catch(err => console.error(err));
