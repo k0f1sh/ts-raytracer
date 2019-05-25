@@ -1,4 +1,5 @@
 import { AABB } from "./aabb";
+import { Box } from "./box";
 import { Vec3 } from "./vec3";
 import { Hittable } from "./hittable";
 import { Sphere } from "./sphere";
@@ -157,5 +158,8 @@ export const cornell_box = () => {
     list.push(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
     list.push(new XZRect(0, 555, 0, 555, 0, white));
     list.push(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
+
+    list.push(new Box(new Vec3(130, 0, 65), new Vec3(295, 165, 230), white));
+    list.push(new Box(new Vec3(265, 0, 295), new Vec3(430, 330, 460), white));
     return new BvhNode(list, 0, 1);
 }
