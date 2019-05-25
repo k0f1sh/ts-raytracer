@@ -4,7 +4,7 @@ import { Ray } from "./ray";
 import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
 import { Camera } from "./camera";
-import { random_scene, two_perlin_spheres, simple_light } from "./util";
+import { random_scene, two_perlin_spheres, simple_light, cornell_box } from "./util";
 import { Perlin } from "./perlin";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
@@ -34,15 +34,16 @@ const main = async () => {
     Perlin.init();
 
     //const lookfrom = new Vec3(13, 2, 3);
-    const lookfrom = new Vec3(26, 4, 6);
-    const lookat = new Vec3(0, 0, 0);
-    const dist_to_focus = 10;
+    const lookfrom = new Vec3(278, 278, -800);
+    const lookat = new Vec3(278, 278, 0);
+    const dist_to_focus = 10.0;
     const aperture = 0.0;
-    const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
+    const vfov = 40.0;
+    const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), vfov, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
 
     //const list = random_scene();
     //const list = two_perlin_spheres();
-    const list = simple_light();
+    const list = cornell_box();
 
     console.log(`P3\n${nx} ${ny}\n255`);
 
