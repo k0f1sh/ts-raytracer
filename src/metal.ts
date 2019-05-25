@@ -19,4 +19,8 @@ export class Metal implements Material {
         attenuation.copy(this.albedo);
         return (scatterd.direction.dot(rec.normal) > 0);
     }
+
+    emitted(u: number, v: number, p: Vec3): Vec3 {
+        return new Vec3(0, 0, 0);
+    }
 }

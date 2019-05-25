@@ -18,4 +18,8 @@ export class Lambertian implements Material {
         attenuation.copy(this.albedo.value(0, 0, rec.p));
         return true;
     }
+
+    emitted(u: number, v: number, p: Vec3): Vec3 {
+        return new Vec3(0, 0, 0);
+    }
 }

@@ -11,6 +11,8 @@ import { BvhNode } from "./bvh_node";
 import { ConstantTexture } from "./constant_texture";
 import { CheckerTexture } from "./checker_texture";
 import { NoiseTexture } from "./noise_texture";
+import { DiffuseLight } from "./diffuse_light";
+import { XYRect } from "./xy_rect";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -124,4 +126,17 @@ export const two_perlin_spheres = () => {
 
     //return new HittableList(list);
     return new BvhNode(list, 0, 1.0);
+};
+
+
+export const simple_light = () => {
+    const perlintext = new NoiseTexture(4);
+    let list = new Array<Hittable>();
+
+    list.push(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(perlintext)));
+    list.push(new Sphere(new Vec3(0, 2, 0), 2, new Lambertian(perlintext)));
+    //list.push(new Sphere(new Vec3(0, 7, 0), 2, new DiffuseLight(new ConstantTexture(new Vec3(4, 4, 4)))));
+    list.push(new XYRect(3, 5, 1, 3, -2, new DiffuseLight(new ConstantTexture(new Vec3(4, 4, 4)))));
+
+    return new BvhNode(list, 0, 1);
 };

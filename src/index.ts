@@ -4,7 +4,7 @@ import { Ray } from "./ray";
 import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
 import { Camera } from "./camera";
-import { random_scene, two_perlin_spheres } from "./util";
+import { random_scene, two_perlin_spheres, simple_light } from "./util";
 import { Perlin } from "./perlin";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
@@ -12,15 +12,17 @@ const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
     if (world.hit(r, 0.001, Number.MAX_VALUE, rec)) {
         let scatterd = Ray.empty();
         let attenuation = new Vec3(0.0, 0.0, 0.0);
+        let emitted = rec.mat.emitted(rec.u, rec.v, rec.p);
         if ((depth < 50) && rec.mat.scatter(r, rec, attenuation, scatterd)) {
             return attenuation.mul(color(scatterd, world, depth + 1));
         } else {
-            return new Vec3(0.0, 0.0, 0.0);
+            return emitted;
         }
     } else {
-        const unit_direction = r.direction.to_unit();
-        const t = 0.5 * (unit_direction.y + 1.0);
-        return (new Vec3(1.0, 1.0, 1.0)).muln(1.0 - t).plus((new Vec3(0.5, 0.7, 1.0).muln(t)));
+        // const unit_direction = r.direction.to_unit();
+        // const t = 0.5 * (unit_direction.y + 1.0);
+        // return (new Vec3(1.0, 1.0, 1.0)).muln(1.0 - t).plus((new Vec3(0.5, 0.7, 1.0).muln(t)));
+        return new Vec3(0.0, 0.0, 0.0);
     }
 };
 
@@ -31,14 +33,16 @@ const main = async () => {
 
     Perlin.init();
 
-    const lookfrom = new Vec3(13, 2, 3);
+    //const lookfrom = new Vec3(13, 2, 3);
+    const lookfrom = new Vec3(26, 4, 6);
     const lookat = new Vec3(0, 0, 0);
     const dist_to_focus = 10;
     const aperture = 0.0;
     const camera = Camera.create(lookfrom, lookat, new Vec3(0, 1, 0), 20, nx / ny, aperture, dist_to_focus, 0.0, 1.0);
 
     //const list = random_scene();
-    const list = two_perlin_spheres();
+    //const list = two_perlin_spheres();
+    const list = simple_light();
 
     console.log(`P3\n${nx} ${ny}\n255`);
 
