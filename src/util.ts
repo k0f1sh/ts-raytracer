@@ -17,6 +17,8 @@ import { XYRect } from "./xy_rect";
 import { YZRect } from "./yz_rect";
 import { XZRect } from "./xz_rect";
 import { FlipNormals } from "./flip_normals";
+import { Translate } from "./translate";
+import { RotateY } from "./rotate_y";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -159,7 +161,22 @@ export const cornell_box = () => {
     list.push(new XZRect(0, 555, 0, 555, 0, white));
     list.push(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
 
-    list.push(new Box(new Vec3(130, 0, 65), new Vec3(295, 165, 230), white));
-    list.push(new Box(new Vec3(265, 0, 295), new Vec3(430, 330, 460), white));
+    list.push(new Translate(
+        new RotateY(
+            new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white),
+            -18
+        ),
+        new Vec3(130, 0, 65)
+    ));
+
+    list.push(new Translate(
+        new RotateY(
+            new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white),
+            15
+        ),
+        new Vec3(265, 0, 295)
+    ));
+
+
     return new BvhNode(list, 0, 1);
 }

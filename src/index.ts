@@ -29,7 +29,7 @@ const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
 const main = async () => {
     const nx: number = 600;
     const ny: number = 400;
-    const ns: number = 50;
+    const ns: number = 250;
 
     Perlin.init();
 
