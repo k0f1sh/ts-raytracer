@@ -61,5 +61,11 @@ export class Vec3 {
         this.y = v.y;
         this.z = v.z;
     }
+
+    static normal(v1: Vec3, v2: Vec3, v3: Vec3): Vec3 {
+        const t0 = v2.minus(v1);
+        const t1 = v3.minus(v1);
+        return t1.cross(t0).to_unit();
+    }
 }
 
