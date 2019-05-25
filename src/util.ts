@@ -216,3 +216,51 @@ export const cornell_smoke = () => {
 
     return new BvhNode(list, 0, 1);
 }
+
+export const final = () => {
+    let nb = 20;
+    const list = new Array<Hittable>();
+    const boxlist = new Array<Hittable>();
+    const boxlist2 = new Array<Hittable>();
+
+    const white = new Lambertian(new ConstantTexture(new Vec3(0.73, 0.73, 0.73)));
+    const ground = new Lambertian(new ConstantTexture(new Vec3(0.48, 0.83, 0.53)));
+
+    for (let i = 0; i < nb; i++) {
+        for (let j = 0; j < nb; j++) {
+            const w = 100;
+            const x0 = -1000 + i * w;
+            const z0 = -1000 + j * w;
+            const y0 = 0;
+            const x1 = x0 + w;
+            const y1 = 100 * (Math.random() + 0.01);
+            const z1 = z0 + w;
+            boxlist.push(new Box(new Vec3(x0, y0, z0), new Vec3(x1, y1, z1), ground));
+        }
+    }
+    list.push(new BvhNode(boxlist, 0, 1));
+
+    const center = new Vec3(400, 400, 200);
+    list.push(new MovingSphere(center, center.plus(new Vec3(30, 0, 0)), 0, 1, 50, new Lambertian(new ConstantTexture(new Vec3(0.7, 0.3, 0.1)))));
+
+    const light = new DiffuseLight(new ConstantTexture(new Vec3(7, 7, 7)));
+    list.push(new XZRect(123, 423, 147, 412, 554, light));
+
+
+    list.push(new Sphere(new Vec3(260, 150, 45), 50, new Dielectric(1.5)));
+    list.push(new Sphere(new Vec3(0, 150, 145), 70, new Metal(new Vec3(0.8, 0.8, 0.9), 10.0)));
+
+
+    const boundary = new Sphere(new Vec3(360, 150, 145), 70, new Dielectric(1.5));
+    list.push(boundary);
+    list.push(new ConstantMedium(boundary, 0.2, new ConstantTexture(new Vec3(0.2, 0.4, 0.9))));
+    const boundary2 = new Sphere(new Vec3(0, 0, 0), 5000, new Dielectric(1.5));
+    list.push(new ConstantMedium(boundary2, 0.0001, new ConstantTexture(new Vec3(1.0, 1.0, 1.0))));
+
+    for (let k = 0; k < 1000; k++) {
+        boxlist2.push(new Sphere(new Vec3(165 * Math.random(), 165 * Math.random(), 165 * Math.random()), 10, white));
+    }
+    list.push(new Translate(new RotateY(new BvhNode(boxlist2, 0, 1), 15), new Vec3(-100, 270, 395)));
+
+    return new BvhNode(list, 0, 1);
+}

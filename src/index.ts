@@ -4,7 +4,7 @@ import { Ray } from "./ray";
 import { HitRecord } from "./hit_record";
 import { Hittable } from "./hittable";
 import { Camera } from "./camera";
-import { random_scene, two_perlin_spheres, simple_light, cornell_box, cornell_smoke } from "./util";
+import { random_scene, two_perlin_spheres, simple_light, cornell_box, cornell_smoke, final } from "./util";
 import { Perlin } from "./perlin";
 
 const color = (r: Ray, world: Hittable, depth: number): Vec3 => {
@@ -44,7 +44,8 @@ const main = async () => {
     //const list = random_scene();
     //const list = two_perlin_spheres();
     //const list = cornell_box();
-    const list = cornell_smoke();
+    //const list = cornell_smoke();
+    const list = final();
 
     console.log(`P3\n${nx} ${ny}\n255`);
 
