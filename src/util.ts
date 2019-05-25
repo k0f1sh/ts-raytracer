@@ -19,6 +19,7 @@ import { XZRect } from "./xz_rect";
 import { FlipNormals } from "./flip_normals";
 import { Translate } from "./translate";
 import { RotateY } from "./rotate_y";
+import { ConstantMedium } from "./constant_medium";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -177,6 +178,41 @@ export const cornell_box = () => {
         new Vec3(265, 0, 295)
     ));
 
+
+    return new BvhNode(list, 0, 1);
+}
+
+export const cornell_smoke = () => {
+    let list = new Array<Hittable>();
+
+    const red = new Lambertian(new ConstantTexture(new Vec3(0.65, 0.05, 0.05)));
+    const white = new Lambertian(new ConstantTexture(new Vec3(0.73, 0.73, 0.73)));
+    const green = new Lambertian(new ConstantTexture(new Vec3(0.12, 0.45, 0.15)));
+    const light = new DiffuseLight(new ConstantTexture(new Vec3(15, 15, 15)));
+    list.push(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
+    list.push(new YZRect(0, 555, 0, 555, 0, red));
+    list.push(new XZRect(213, 343, 227, 332, 554, light));
+    list.push(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
+    list.push(new XZRect(0, 555, 0, 555, 0, white));
+    list.push(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
+
+    const b1 = new Translate(
+        new RotateY(
+            new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white),
+            -18
+        ),
+        new Vec3(130, 0, 65)
+    );
+    list.push(new ConstantMedium(b1, 0.01, new ConstantTexture(new Vec3(1.0, 1.0, 1.0))));
+
+    const b2 = new Translate(
+        new RotateY(
+            new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white),
+            15
+        ),
+        new Vec3(265, 0, 295)
+    );
+    list.push(new ConstantMedium(b2, 0.01, new ConstantTexture(new Vec3(0.0, 0.0, 0.0))));
 
     return new BvhNode(list, 0, 1);
 }
