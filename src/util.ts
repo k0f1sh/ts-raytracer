@@ -21,6 +21,7 @@ import { Translate } from "./translate";
 import { RotateY } from "./rotate_y";
 import { ConstantMedium } from "./constant_medium";
 import { Polygon } from "./polygon";
+import { ObjLoader } from "./obj_loader";
 
 export const random_in_unit_sphere = (): Vec3 => {
     let p = new Vec3(0.0, 0.0, 0.0);
@@ -244,7 +245,7 @@ export const final = () => {
     const center = new Vec3(400, 400, 200);
     list.push(new MovingSphere(center, center.plus(new Vec3(30, 0, 0)), 0, 1, 50, new Lambertian(new ConstantTexture(new Vec3(0.7, 0.3, 0.1)))));
 
-    const light = new DiffuseLight(new ConstantTexture(new Vec3(7, 7, 7)));
+    const light = new DiffuseLight(new ConstantTexture(new Vec3(14, 14, 14)));
     list.push(new XZRect(123, 423, 147, 412, 554, light));
 
 
@@ -273,16 +274,18 @@ export const cornell_box_dragon = () => {
     const white = new Lambertian(new ConstantTexture(new Vec3(0.73, 0.73, 0.73)));
     const green = new Lambertian(new ConstantTexture(new Vec3(0.12, 0.45, 0.15)));
     const light = new DiffuseLight(new ConstantTexture(new Vec3(15, 15, 15)));
+    list.push(new XZRect(213, 343, 227, 332, 554, light));
+
     list.push(new FlipNormals(new YZRect(0, 555, 0, 555, 555, green)));
     list.push(new YZRect(0, 555, 0, 555, 0, red));
-    list.push(new XZRect(213, 343, 227, 332, 554, light));
     list.push(new FlipNormals(new XZRect(0, 555, 0, 555, 555, white)));
     list.push(new XZRect(0, 555, 0, 555, 0, white));
     list.push(new FlipNormals(new XYRect(0, 555, 0, 555, 555, white)));
 
+    const dragon_polygons = ObjLoader.load("./dragon_big.obj", white);
     list.push(new Translate(
-        new Polygon(new Vec3(0, 0, 0), new Vec3(100, 200, 250), new Vec3(250, 100, 0), white),
-        new Vec3(250, 0, 250)
+        new BvhNode(dragon_polygons, 0, 1),
+        new Vec3(250, 0, 350)
     ));
 
     return new BvhNode(list, 0, 1);
