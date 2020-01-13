@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
-    "d": "tsc && node dist/index.js >> output.ppm",
+    "d": "tsc && node dist/index.js > output.ppm",
     "dev": "tsc && node dist/index.js > output.ppm && echo \"complete!\"; viewnior output.ppm",    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
